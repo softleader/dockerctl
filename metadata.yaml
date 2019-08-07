@@ -1,0 +1,7 @@
+name: dockerctl
+version: 0.1.0
+usage: the missing parts in docker command
+description: The missing parts in docker command
+exec:
+  command: $SL_PLUGIN_DIR/dockerctl
+ignoreglobalflags: false
