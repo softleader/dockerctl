@@ -13,6 +13,8 @@ $ dockerctl --help
 
 dockerctl can be safely [aliased](#aliasing) as `docker` so you can type `$ docker COMMAND` in the shell and get all the usual `dockerctl` features.
 
+See [Usage documentation](https://github.com/softleader/dockerctl/wiki) for the list of all commands and their arguments.
+
 ## Installation
 
 Download the latest [compiled binaries](https://github.com/softleader/dockerctl/releases) and put it anywhere in your executable path.
