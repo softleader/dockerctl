@@ -65,7 +65,7 @@ func (c *rshCmd) run() (err error) {
 		if service, err = PickOneService(services); err != nil {
 			return err
 		}
-		logrus.Debugf("selected service: %s", nodes[service.Node].Addr)
+		logrus.Debugf("node addr of selected service: %s", nodes[service.Node].Addr)
 	}
 
 	return dockerd.RunRemoteShell(logrus.StandardLogger(), os.Stdin, os.Stdout, os.Stderr, nodes, service, c.args)
