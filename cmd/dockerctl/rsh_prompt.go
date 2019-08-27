@@ -12,9 +12,9 @@ func PickOneService(services []dockerd.Service) (*dockerd.Service, error) {
 		Items: services,
 		Templates: &promptui.SelectTemplates{
 			Label:    "{{ . }}?",
-			Active:   promptui.IconSelect + " {{ .Name }}",
-			Inactive: "  {{ .Name }}",
-			Selected: promptui.IconGood + " {{ .Name }}",
+			Active:   promptui.IconSelect + " {{ .Name }}\t{{ .Node }}\t{{ .Ports }}",
+			Inactive: "  {{ .Name }}\t{{ .Node }}\t{{ .Ports }}",
+			Selected: promptui.IconGood + " {{ .Name }}\t{{ .Node }}\t{{ .Ports }}",
 		},
 		Searcher: func(input string, index int) bool {
 			service := services[index]
