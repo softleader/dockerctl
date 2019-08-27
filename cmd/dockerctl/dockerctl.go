@@ -55,9 +55,10 @@ func main() {
 
 func newRootCmd(args []string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "dockerctl",
-		Short: "the missing parts in docker command",
-		Long:  "The missing parts in docker command",
+		Use:          "dockerctl",
+		Short:        "the missing parts in docker command",
+		Long:         "The missing parts in docker command",
+		SilenceUsage: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			logrus.SetOutput(cmd.OutOrStdout())
 			logrus.SetFormatter(&formatter.PlainFormatter{})
