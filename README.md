@@ -33,7 +33,7 @@ eval "$(dockerctl alias)"
 
 ### Shell tab-completion
 
-Place this command in your `.bash_profile` or other startup script, e.g.:
+Place this command in your `.bash_profile` or other startup script, e.g.
 
 ``` sh
 echo "source <(dockerctl completion bash)" >> ~/.bashrc  # for bash users
