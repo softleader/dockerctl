@@ -19,7 +19,7 @@ const (
 // Node 代表了一台 Node 的 Name/Ip
 type Node struct {
 	Name string `yaml:"name"`
-	IP   string `yaml:"ip"`
+	Addr string `yaml:"addr"`
 }
 
 // Nodes 代表了很多 Node
@@ -74,6 +74,9 @@ func loadLocal(log *logrus.Logger, path string) (n *nodes, err error) {
 	}
 	n = &nodes{}
 	err = yaml.Unmarshal(data, n)
+	for _, node := range n.Nodes {
+		log.Debugf("  %+v", node)
+	}
 	return
 }
 
@@ -82,21 +85,23 @@ func collectNodes(log *logrus.Logger) (n *nodes, err error) {
 	if err != nil {
 		return nil, err
 	}
+	for _, name := range names {
+		log.Debugf("  %+v", name)
+	}
 
 	n = &nodes{}
 	n.Expires = time.Now().AddDate(0, 0, 1)
 	for _, name := range names {
-		if name == "" {
-			continue
-		}
-		ip, err := getNodeIp(log, name)
+		addr, err := inspectNodeAddr(log, name)
 		if err != nil {
 			return nil, err
 		}
-		n.Nodes = append(n.Nodes, Node{
+		node := Node{
 			Name: name,
-			IP:   ip,
-		})
+			Addr: strings.TrimSuffix(addr, fmt.Sprintln()),
+		}
+		log.Debugf("  %+v", node)
+		n.Nodes = append(n.Nodes, node)
 	}
 
 	return n, nil
@@ -115,9 +120,9 @@ func listNodeNames(log *logrus.Logger) ([]string, error) {
 	return strings.Split(out, fmt.Sprintln()), nil
 }
 
-func getNodeIp(log *logrus.Logger, nodeName string) (string, error) {
+func inspectNodeAddr(log *logrus.Logger, nodeName string) (string, error) {
 	args := []string{"node", "inspect", nodeName, "-f", "{{.Status.Addr}}"}
-	log.Debugf("getting node ip: docker %s", strings.Join(args, " "))
+	log.Debugf("inspecting node addr: docker %s", strings.Join(args, " "))
 	out, err := RunCombinedOutput(args...)
 	if err != nil {
 		if out != "" {

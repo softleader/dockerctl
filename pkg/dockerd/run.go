@@ -1,8 +1,10 @@
 package dockerd
 
 import (
+	"fmt"
 	"io"
 	"os/exec"
+	"strings"
 )
 
 func Run(in io.Reader, out io.Writer, err io.Writer, args ...string) error {
@@ -17,7 +19,7 @@ func RunCombinedOutput(args ...string) (out string, err error) {
 	cmd := exec.Command("docker", args...)
 	b, err := cmd.CombinedOutput()
 	if b != nil {
-		out = string(b)
+		out = strings.TrimSuffix(string(b), fmt.Sprintln())
 	}
 	return
 }

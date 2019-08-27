@@ -22,6 +22,7 @@ var (
 
 const (
 	helpTemplate = `%s
+
 These commands are provided by dockerctl:
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`

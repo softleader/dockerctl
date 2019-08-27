@@ -22,9 +22,9 @@ func (s *Service) containerID() string {
 	return fmt.Sprintf("%s.%s", s.Name, s.ID)
 }
 
-func ServicePs(log *logrus.Logger, service string) (ss []Service, err error) {
+func FindService(log *logrus.Logger, service string) (ss []Service, err error) {
 	args := []string{"service", "ps", service, "-f", "desired-state=running", "--no-trunc", "--format", "{{json .}}"}
-	log.Debugf("service ps: docker %s", strings.Join(args, " "))
+	log.Debugf("finding service: docker %s", strings.Join(args, " "))
 	out, err := RunCombinedOutput(args...)
 	if err != nil {
 		if out != "" {
@@ -34,13 +34,11 @@ func ServicePs(log *logrus.Logger, service string) (ss []Service, err error) {
 	}
 	lines := strings.Split(out, fmt.Sprintln())
 	for _, line := range lines {
-		if line == "" {
-			continue
-		}
 		s := Service{}
 		if err := json.Unmarshal([]byte(line), &s); err != nil {
 			return nil, err
 		}
+		log.Debugf("  %+v", s)
 		ss = append(ss, s)
 	}
 	return

@@ -50,13 +50,11 @@ func (c *rshCmd) run() (err error) {
 	if err != nil {
 		return err
 	}
-	logrus.Debugf("%+v", nodes)
 
-	services, err := dockerd.ServicePs(logrus.StandardLogger(), c.service)
+	services, err := dockerd.FindService(logrus.StandardLogger(), c.service)
 	if err != nil {
 		return err
 	}
-	logrus.Debugf("%+v", services)
 
 	var service *dockerd.Service
 	if len := len(services); len == 0 {
@@ -69,6 +67,6 @@ func (c *rshCmd) run() (err error) {
 		}
 	}
 
-	logrus.Debugf("chose service ip: %s", nodes[service.Node].IP)
+	logrus.Debugf("node addr of selected service: %s", nodes[service.Node].Addr)
 	return dockerd.RunRemoteShell(logrus.StandardLogger(), os.Stdin, os.Stdout, os.Stderr, nodes, service, c.args)
 }
