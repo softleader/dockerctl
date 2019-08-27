@@ -34,6 +34,9 @@ func newRshCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c.service = args[0]
 			c.args = args[1:]
+			if len(c.args) == 0 {
+				return fmt.Errorf(`requires at least 1 arg(s) after double-dash "--", only received 0`)
+			}
 			return c.run()
 		},
 	}
