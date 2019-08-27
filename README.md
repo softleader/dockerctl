@@ -27,7 +27,7 @@ outputs a script suitable for `eval`.
 You should place this command in your `.bash_profile` or other startup script:
 
 ``` sh
-eval "$(hub alias)"
+eval "$(dockerctl alias)"
 ```
 
 ### Shell tab-completion
