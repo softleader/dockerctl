@@ -37,6 +37,6 @@ eval "$(dockerctl alias)"
 Place this command in your `.bash_profile` or other startup script, e.g.:
 
 ``` sh
-echo "source <(slctl completion bash)" >> ~/.bashrc  # for bash users
-echo "source <(slctl completion zsh)" >> ~/.zshrc    # for zsh users
+echo "source <(dockerctl completion bash)" >> ~/.bashrc  # for bash users
+echo "source <(dockerctl completion zsh)" >> ~/.zshrc    # for zsh users
 ```
