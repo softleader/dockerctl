@@ -77,6 +77,7 @@ func newRootCmd(args []string) *cobra.Command {
 		newVersionCmd(),
 		newRshCmd(),
 		newAliasCmd(),
+		newCompletionCmd(),
 	)
 
 	f := cmd.PersistentFlags()
