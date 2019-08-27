@@ -15,5 +15,9 @@ func RunRemoteShell(log *logrus.Logger, in io.Reader, out io.Writer, err io.Writ
 	cmd.Stdin = in
 	cmd.Stdout = out
 	cmd.Stderr = err
-	return cmd.Run()
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	cmd.Wait() // what happens in ssh stays in ssh
+	return nil
 }
