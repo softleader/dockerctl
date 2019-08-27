@@ -7,7 +7,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -106,21 +105,25 @@ func collectNodes(log *logrus.Logger) (n *nodes, err error) {
 func listNodeNames(log *logrus.Logger) ([]string, error) {
 	args := []string{"node", "ls", "--format", "{{.Hostname}}"}
 	log.Debugf("listing nodes: docker %s", strings.Join(args, " "))
-	cmd := exec.Command("docker", args...)
-	b, err := cmd.CombinedOutput()
+	out, err := RunCombinedOutput(args...)
 	if err != nil {
+		if out != "" {
+			err = fmt.Errorf("%s%s", out, err)
+		}
 		return nil, err
 	}
-	return strings.Split(string(b), fmt.Sprintln()), nil
+	return strings.Split(out, fmt.Sprintln()), nil
 }
 
 func getNodeIp(log *logrus.Logger, nodeName string) (string, error) {
 	args := []string{"node", "inspect", nodeName, "-f", "{{.Status.Addr}}"}
 	log.Debugf("getting node ip: docker %s", strings.Join(args, " "))
-	cmd := exec.Command("docker", args...)
-	b, err := cmd.CombinedOutput()
+	out, err := RunCombinedOutput(args...)
 	if err != nil {
-		return "", fmt.Errorf("%s: %s", err, string(b))
+		if out != "" {
+			err = fmt.Errorf("%s%s", out, err)
+		}
+		return "", err
 	}
-	return string(b), nil
+	return out, nil
 }
