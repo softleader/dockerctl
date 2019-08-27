@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/softleader/dockerctl)](https://goreportcard.com/badge/github.com/softleader/dockerctl)
+[![Go Report Card](https://goreportcard.com/badge/github.com/softleader/dockerctl)](https://goreportcard.com/report/github.com/softleader/dockerctl)
 ![stability-stable](https://img.shields.io/badge/stability-stable-green.svg)
 [![license](https://img.shields.io/github/license/softleader/dockerctl.svg)](./LICENSE)
 [![release](https://img.shields.io/github/release/softleader/dockerctl.svg)](https://github.com/softleader/dockerctl/releases)
