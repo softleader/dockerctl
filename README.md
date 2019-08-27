@@ -23,8 +23,7 @@ Download the latest [compiled binaries](https://github.com/softleader/dockerctl/
 
 Some dockerctl features feel best when it's aliased as `docker`. This is not dangerous; your _normal docker commands will all work_. dockerctl merely adds some sugar.
 
-`dockerctl alias` displays instructions for the current shell. With the `-s` flag, it
-outputs a script suitable for `eval`.
+`dockerctl alias` displays instructions for the current shell.
 
 You should place this command in your `.bash_profile` or other startup script:
 
