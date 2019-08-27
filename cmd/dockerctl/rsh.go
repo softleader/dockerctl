@@ -16,7 +16,7 @@ Example:
 
 	$ dockerctl rsh SERVICE_ID bash
 	$ dockerctl rsh SERVICE_ID top
-	$ dockerctl rsh SERVICE_ID ps -- -aux
+	$ dockerctl rsh SERVICE_ID free -- -h
 `
 
 type rshCmd struct {
