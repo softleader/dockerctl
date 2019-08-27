@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sirupsen/logrus"
+	"github.com/softleader/dockerctl/pkg/dockerd"
 	"github.com/spf13/cobra"
 )
 
@@ -13,8 +14,8 @@ func newVersionCmd() *cobra.Command {
 	c := &versionCmd{}
 	cmd := &cobra.Command{
 		Use:   "version",
-		Short: "print dockerctl version",
-		Long:  "print dockerctl version",
+		Short: "Print dockerctl version",
+		Long:  "Print dockerctl version",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return c.run()
@@ -29,9 +30,13 @@ func newVersionCmd() *cobra.Command {
 
 func (c *versionCmd) run() error {
 	if c.full {
-		logrus.Infoln(metadata.FullString())
+		out, _ := dockerd.RunCombinedOutput("version")
+		logrus.Infoln(out)
+		logrus.Infof("\nDockerctl:\n  %s", metadata.FullString())
 	} else {
-		logrus.Infoln(metadata.String())
+		out, _ := dockerd.RunCombinedOutput("--version")
+		logrus.Infoln(out)
+		logrus.Infof("Dockerctl version %s", metadata.String())
 	}
 	return nil
 }

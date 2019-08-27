@@ -1,7 +1,4 @@
 HAS_GOLINT := $(shell command -v golint;)
-SL_HOME ?= $(shell slctl home)
-SL_PLUGIN_DIR ?= $(SL_HOME)/plugins/dockerctl/
-METADATA := metadata.yaml
 VERSION :=
 COMMIT :=
 DIST := $(CURDIR)/_dist
@@ -12,9 +9,6 @@ MAIN := ./cmd/dockerctl
 
 .PHONY: install
 install: bootstrap test build
-	mkdir -p $(SL_PLUGIN_DIR)
-	cp $(BUILD)/$(BINARY) $(SL_PLUGIN_DIR)
-	cp $(METADATA) $(SL_PLUGIN_DIR)
 
 .PHONY: test
 test: golint
@@ -35,7 +29,6 @@ endif
 .PHONY: build
 build: clean bootstrap
 	mkdir -p $(BUILD)
-	cp $(METADATA) $(BUILD)
 	go build -o $(BUILD)/$(BINARY) $(MAIN)
 
 .PHONY: dist
@@ -49,13 +42,12 @@ endif
 	go get -u github.com/inconshreveable/mousetrap
 	mkdir -p $(BUILD)
 	mkdir -p $(DIST)
-	sed -E 's/^(version: )(.+)/\1$(VERSION)/g' $(METADATA) > $(BUILD)/$(METADATA)
 	GOOS=linux GOARCH=amd64 go build -o $(BUILD)/$(BINARY) -ldflags $(LDFLAGS) -a -tags netgo $(MAIN)
-	tar -C $(BUILD) -zcvf $(DIST)/$(BINARY)-linux-$(VERSION).tgz $(BINARY) $(METADATA)
+	tar -C $(BUILD) -zcvf $(DIST)/$(BINARY)-linux-$(VERSION).tgz $(BINARY)
 	GOOS=darwin GOARCH=amd64 go build -o $(BUILD)/$(BINARY) -ldflags $(LDFLAGS) -a -tags netgo $(MAIN)
-	tar -C $(BUILD) -zcvf $(DIST)/$(BINARY)-darwin-$(VERSION).tgz $(BINARY) $(METADATA)
+	tar -C $(BUILD) -zcvf $(DIST)/$(BINARY)-darwin-$(VERSION).tgz $(BINARY)
 	GOOS=windows GOARCH=amd64 go build -o $(BUILD)/$(BINARY).exe -ldflags $(LDFLAGS) -a -tags netgo $(MAIN)
-	tar -C $(BUILD) -llzcvf $(DIST)/$(BINARY)-windows-$(VERSION).tgz $(BINARY).exe $(METADATA)
+	tar -C $(BUILD) -llzcvf $(DIST)/$(BINARY)-windows-$(VERSION).tgz $(BINARY).exe
 
 .PHONY: bootstrap
 bootstrap:

@@ -1,30 +1,54 @@
 package main
 
 import (
+	"fmt"
+	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
+	"github.com/softleader/dockerctl/pkg/dockerd"
 	"github.com/softleader/dockerctl/pkg/formatter"
 	"github.com/softleader/dockerctl/pkg/release"
 	"github.com/spf13/cobra"
 	"os"
-	"strconv"
 )
 
 var (
-	// 在包版時會動態指定 version 及 commit
 	version, commit string
 	metadata        *release.Metadata
+	verbose         = false
 
-	// global flags
-	offline, _ = strconv.ParseBool(os.Getenv("SL_OFFLINE"))
-	verbose, _ = strconv.ParseBool(os.Getenv("SL_VERBOSE"))
-	token      = os.Getenv("SL_TOKEN")
+	// default cache folder
+	cache, _ = homedir.Expand("~/.config/dockerctl")
+)
+
+const (
+	helpTemplate = `%s
+These commands are provided by dockerctl:
+
+{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
 )
 
 func main() {
 	cobra.OnInitialize(
 		initMetadata,
 	)
-	if err := newRootCmd(os.Args[1:]).Execute(); err != nil {
+
+	args := os.Args[1:]
+	root := newRootCmd(args)
+
+	cmd, _, e := root.Find(args)
+	if cmd == nil || e != nil { // passing args to 'docker' here
+		if err := dockerd.Run(os.Stdin, os.Stdout, os.Stderr, args...); err != nil {
+			os.Exit(1)
+		}
+		return
+	}
+
+	if cmd == root {
+		dockerHelp, _ := dockerd.RunCombinedOutput("--help")
+		root.SetHelpTemplate(fmt.Sprintf(helpTemplate, dockerHelp))
+	}
+
+	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
@@ -32,24 +56,31 @@ func main() {
 func newRootCmd(args []string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "dockerctl",
-		Short: "the dockerctl plugin",
-		Long:  "The dockerctl plugin",
+		Short: "the missing parts in docker command",
+		Long:  "The missing parts in docker command",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			logrus.SetOutput(cmd.OutOrStdout())
 			logrus.SetFormatter(&formatter.PlainFormatter{})
+			if verbose {
+				logrus.SetLevel(logrus.DebugLevel)
+			}
+			// 如果是透過 slctl 啟動的, 就使用 slctl 安排的目錄吧
+			mount, found := os.LookupEnv("SL_PLUGIN_MOUNT")
+			if found {
+				cache = mount
+			}
 			return nil
 		},
 	}
 
 	cmd.AddCommand(
 		newVersionCmd(),
-		newServiceCmd(),
+		newRshCmd(),
+		newAliasCmd(),
 	)
 
 	f := cmd.PersistentFlags()
-	f.BoolVar(&offline, "offline", offline, "work offline, Overrides $SL_OFFLINE")
-	f.BoolVarP(&verbose, "verbose", "v", verbose, "enable verbose output, Overrides $SL_VERBOSE")
-	f.StringVar(&token, "token", token, "github access token. Overrides $SL_TOKEN")
+	f.BoolVarP(&verbose, "verbose", "v", verbose, "enable verbose output")
 	f.Parse(args)
 
 	return cmd
