@@ -168,7 +168,7 @@ func newCompletionCmd() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:       "completion SHELL",
-		Short:     "generate completion script for the specified shell (bash or zsh)",
+		Short:     "Generate completion script for the specified shell (bash or zsh)",
 		Long:      completionDesc,
 		Args:      cobra.ExactArgs(1),
 		ValidArgs: shells,

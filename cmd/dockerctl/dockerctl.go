@@ -23,7 +23,7 @@ var (
 const (
 	helpTemplate = `%s
 
-These commands are provided by dockerctl:
+These commands are provided by dockerctl (https://github.com/softleader/dockerctl):
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
 )
@@ -65,11 +65,6 @@ func newRootCmd(args []string) *cobra.Command {
 			logrus.SetFormatter(&formatter.PlainFormatter{})
 			if verbose {
 				logrus.SetLevel(logrus.DebugLevel)
-			}
-			// 如果是透過 slctl 啟動的, 就使用 slctl 安排的目錄吧
-			mount, found := os.LookupEnv("SL_PLUGIN_MOUNT")
-			if found {
-				cache = mount
 			}
 			return nil
 		},
