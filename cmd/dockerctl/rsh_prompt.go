@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// PickOneService prompt to ask to choose a service
 func PickOneService(services []dockerd.Service) (*dockerd.Service, error) {
 	prompt := promptui.Select{
 		Label: "Select one container to start a shell session",

@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Service represent docker service
 type Service struct {
 	CurrentState string `json:"CurrentState"`
 	DesiredState string `json:"DesiredState"`
@@ -22,6 +23,7 @@ func (s *Service) containerID() string {
 	return fmt.Sprintf("%s.%s", s.Name, s.ID)
 }
 
+// FindService finds a docker service
 func FindService(log *logrus.Logger, service string) (ss []Service, err error) {
 	args := []string{"service", "ps", service, "-f", "desired-state=running", "--no-trunc", "--format", "{{json .}}"}
 	log.Debugf("finding service: docker %s", strings.Join(args, " "))

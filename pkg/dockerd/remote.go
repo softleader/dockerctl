@@ -2,22 +2,23 @@ package dockerd
 
 import (
 	"github.com/sirupsen/logrus"
-	"io"
+	"os"
 	"os/exec"
 	"strings"
 )
 
-func RunRemoteShell(log *logrus.Logger, in io.Reader, out io.Writer, err io.Writer, nodes map[string]Node, service *Service, args []string) error {
+// RunRemoteShell runs a remote shell though ssh command
+func RunRemoteShell(log *logrus.Logger, nodes map[string]Node, service *Service, args []string) error {
 	arg := []string{nodes[service.Node].Addr, "-t", "docker", "exec", "-it", service.containerID()}
 	arg = append(arg, args...)
 	log.Debugf("running remote-shell: ssh %v", strings.Join(arg, " "))
 	cmd := exec.Command("ssh", arg...)
-	cmd.Stdin = in
-	cmd.Stdout = out
-	cmd.Stderr = err
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	cmd.Wait() // what happens in ssh stays in ssh
+	cmd.Wait() // what happens in remote-shell stays in remote-shell
 	return nil
 }

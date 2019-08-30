@@ -5,7 +5,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/softleader/dockerctl/pkg/dockerd"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 const rshDesc = `Open a remote shell session to a container inside swarm service
@@ -68,5 +67,5 @@ func (c *rshCmd) run() (err error) {
 		logrus.Debugf("node addr of selected service: %s", nodes[service.Node].Addr)
 	}
 
-	return dockerd.RunRemoteShell(logrus.StandardLogger(), os.Stdin, os.Stdout, os.Stderr, nodes, service, c.args)
+	return dockerd.RunRemoteShell(logrus.StandardLogger(), nodes, service, c.args)
 }
