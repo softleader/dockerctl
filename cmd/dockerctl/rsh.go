@@ -28,7 +28,7 @@ func newRshCmd() *cobra.Command {
 	c := &rshCmd{}
 	cmd := &cobra.Command{
 		Use:   "rsh",
-		Short: "Start a shell session in a container",
+		Short: "Start a shell session in a container of a Swarm service",
 		Long:  rshDesc,
 		Args:  cobra.MinimumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
