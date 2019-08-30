@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const rshDesc = `Open a remote shell session to a container inside swarm service
+const rshDesc = `Open a remote shell session to a container of a Swarm service
 
 	$ dockerctl rsh SERVICE_ID COMMAND -- ARGS...
 
