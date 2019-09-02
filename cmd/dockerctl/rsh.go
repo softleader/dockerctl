@@ -13,9 +13,17 @@ const rshDesc = `Start a shell session in a containe of a Swarm service
 
 Example:
 
+	# To open a bash shell
 	$ dockerctl rsh SERVICE_ID bash
+
+	# To get 'top' of a container  
 	$ dockerctl rsh SERVICE_ID top
-	$ dockerctl rsh SERVICE_ID free -- -h
+
+	# To kill/restart the container using the default SIGTERM (terminate) signal
+	$ dockerctl rsh SERVICE_ID kill 1
+
+	# To kill/restart the container immediately (which gets no chance to capture the signal)
+	$ dockerctl rsh SERVICE_ID kill 1 -- -9
 `
 
 type rshCmd struct {
