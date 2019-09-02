@@ -65,7 +65,7 @@ func (c *rshCmd) run() (err error) {
 
 	var service *dockerd.Service
 	if len := len(services); len == 0 {
-		return fmt.Errorf("not found any desired-state=running container by service id: %s", c.service)
+		return fmt.Errorf("not found any desired-state=running container of service: %s", c.service)
 	} else if len == 1 {
 		service = &services[0]
 	} else {
