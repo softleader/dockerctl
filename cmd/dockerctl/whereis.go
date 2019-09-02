@@ -11,30 +11,36 @@ import (
 	"strings"
 )
 
-const whereisDesc = `To find out which node the container is running of a Swarm service
-
-	$ dockerctl whereis SERVICE_ID
-
-There is a alias 'wheres' for short:
+const wheresDesc = `To find out which node the container is running of a Swarm service
 
 	$ dockerctl wheres SERVICE_ID
+
+Pass '--output' to specify the output format
+
+	$ dockerctl wheres SERVICE_ID -o json
+	$ dockerctl wheres SERVICE_ID -o yaml
+
+Pass '--desired-state' to specify the desired state to filter out:
+(https://docs.docker.com/engine/reference/commandline/service_ps/#desired-state)
+
+	$ dockerctl wheres SERVICE_ID --desired-state accepted
 `
 
-type whereisCmd struct {
+type wheresCmd struct {
 	service      string
 	desiredState string
 	output       string
 	noHeaders    bool
 }
 
-func newWhereisCmd() *cobra.Command {
-	c := &whereisCmd{}
+func newWheresCmd() *cobra.Command {
+	c := &wheresCmd{}
 	cmd := &cobra.Command{
-		Use:     "whereis",
+		Use:     "wheres",
 		Short:   "To find out which node the container is running of a Swarm service",
-		Long:    whereisDesc,
+		Long:    wheresDesc,
 		Args:    cobra.MinimumNArgs(1),
-		Aliases: []string{"wheres"},
+		Aliases: []string{"whereis"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c.service = args[0]
 			return c.run()
@@ -42,14 +48,14 @@ func newWhereisCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&c.desiredState, "desired-state", dockerd.RunningDesiredState, "specify the desired state to filter out")
+	f.StringVar(&c.desiredState, "desired-state", dockerd.RunningDesiredState, fmt.Sprintf("specify the desired state to filter out, one of: %s|%s|%s", dockerd.RunningDesiredState, dockerd.ShutdownDesiredState, dockerd.AcceptedDesiredState))
 	f.StringVarP(&c.output, "output", "o", "wide", "output format, one of: json|yaml|wide")
 	f.BoolVar(&c.noHeaders, "no-headers", false, "when using the default output format, don't print headers (default print headers).")
 
 	return cmd
 }
 
-func (c *whereisCmd) run() (err error) {
+func (c *wheresCmd) run() (err error) {
 	services, err := dockerd.FindServiceWithDesiredState(logrus.StandardLogger(), c.service, c.desiredState)
 	if err != nil {
 		return err

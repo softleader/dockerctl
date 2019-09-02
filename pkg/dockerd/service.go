@@ -8,8 +8,12 @@ import (
 )
 
 const (
-	// RunningDesiredState is running for sure
+	// RunningDesiredState is running desired state
 	RunningDesiredState = "running"
+	// ShutdownDesiredState is shutdown desired state
+	ShutdownDesiredState = "shutdown"
+	// AcceptedDesiredState is accepted desired state
+	AcceptedDesiredState = "accepted"
 )
 
 // Service represent docker service
