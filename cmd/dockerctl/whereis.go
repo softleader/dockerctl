@@ -49,7 +49,7 @@ func newWheresCmd() *cobra.Command {
 
 	f := cmd.Flags()
 	f.StringVar(&c.desiredState, "desired-state", dockerd.RunningDesiredState, fmt.Sprintf("specify the desired state to filter out, one of: %s|%s|%s", dockerd.RunningDesiredState, dockerd.ShutdownDesiredState, dockerd.AcceptedDesiredState))
-	f.StringVarP(&c.output, "output", "o", "wide", "output format, one of: json|yaml|wide")
+	f.StringVarP(&c.output, "output", "o", "yaml", "output format, one of: json|yaml|wide")
 	f.BoolVar(&c.noHeaders, "no-headers", false, "when using the default output format, don't print headers (default print headers).")
 
 	return cmd
@@ -92,7 +92,7 @@ func printYAML(services []dockerd.Service) error {
 		if err != nil {
 			return err
 		}
-		logrus.Printf("%s\n", b)
+		logrus.Printf("%s", b)
 	}
 	return nil
 }
