@@ -18,14 +18,14 @@ const (
 
 // Service represent docker service
 type Service struct {
-	CurrentState string `json:"CurrentState"`
-	DesiredState string `json:"DesiredState"`
-	Error        string `json:"Error"`
-	ID           string `json:"ID"`
-	Image        string `json:"Image"`
-	Name         string `json:"Name"`
-	Node         string `json:"Node"`
-	Ports        string `json:"Ports"`
+	ID           string `json:"ID" yaml:"ID"`
+	Name         string `json:"Name" yaml:"Name"`
+	Image        string `json:"Image" yaml:"Image"`
+	Node         string `json:"Node" yaml:"Node"`
+	DesiredState string `json:"DesiredState" yaml:"DesiredState"`
+	CurrentState string `json:"CurrentState" yaml:"CurrentState"`
+	Error        string `json:"Error" yaml:"Error"`
+	Ports        string `json:"Ports" yaml:"Ports"`
 }
 
 func (s *Service) containerID() string {
