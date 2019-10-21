@@ -76,6 +76,7 @@ func newRootCmd(args []string) *cobra.Command {
 		newWheresCmd(),
 		newAliasCmd(),
 		newCompletionCmd(),
+		newAddrCmd(),
 	)
 
 	f := cmd.PersistentFlags()
