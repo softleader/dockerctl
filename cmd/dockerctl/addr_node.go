@@ -4,6 +4,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/softleader/dockerctl/pkg/dockerd"
 	"github.com/spf13/cobra"
+	"sort"
 )
 
 const nodeAddrDesc = `List addr of all running node
@@ -11,6 +12,7 @@ const nodeAddrDesc = `List addr of all running node
 
 type addrNodeCmd struct {
 	force bool
+	sort  bool
 }
 
 func newAddrNodeCmd() *cobra.Command {
@@ -26,6 +28,7 @@ func newAddrNodeCmd() *cobra.Command {
 
 	f := cmd.Flags()
 	f.BoolVarP(&c.force, "force", "f", c.force, "force to evict the node cache")
+	f.BoolVar(&c.sort, "sort", c.sort, "sort the addr")
 
 	return cmd
 }
@@ -35,8 +38,15 @@ func (c *addrNodeCmd) run() (err error) {
 	if err != nil {
 		return err
 	}
+	var addrs []string
 	for _, node := range nodes {
-		logrus.Println(node.Addr)
+		addrs = append(addrs, node.Addr)
+	}
+	if c.sort {
+		sort.Strings(addrs)
+	}
+	for _, addr := range addrs {
+		logrus.Println(addr)
 	}
 	return nil
 }
