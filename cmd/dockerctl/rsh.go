@@ -13,11 +13,11 @@ const rshDesc = `Start a shell session in a containe of a Swarm service
 
 Example:
 
-	# To open a bash or sh session (default behavior)
+	# To open a shell session (default behavior)
 	$ dockerctl rsh SERVICE_ID
 
-	# To open a z shell
-	$ dockerctl rsh SERVICE_ID zsh
+	# To open a bash shell session
+	$ dockerctl rsh SERVICE_ID bash
 
 	# To get 'top' of a container  
 	$ dockerctl rsh SERVICE_ID top
@@ -46,7 +46,7 @@ func newRshCmd() *cobra.Command {
 			c.service = args[0]
 			c.args = args[1:]
 			if len(c.args) == 0 {
-				c.args = append(c.args, "bash || sh")
+				c.args = append(c.args, "sh")
 			}
 			return c.run()
 		},
